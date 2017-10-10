@@ -1,3 +1,5 @@
+require_relative "cursor"
+require "colorize"
 class Board
 
   attr_accessor :grid
@@ -11,11 +13,11 @@ class Board
     @grid.each_with_index do |row, i|
       row.each_index do |j|
         if i < 2
-          self[[i,j]] = Piece.new
+          self[[i,j]] = Piece.new("  k  ",:black, [0,0])
         elsif i >1 && i < 6
-          self[[i,j]] =  NullPiece.new
+          self[[i,j]] =  NullPiece.new("     ",:no,[5,5])
         else
-          self[[i,j]] = Piece.new
+          self[[i,j]] = Piece.new("  k  ",:black, [0,0])
         end
       end
     end
@@ -36,10 +38,18 @@ class Board
     raise ArgumentError.new("There is already a piece at this position") if self[end_pos].nil?
   end
 
+  def in_bounds?(pos)
+    pos.all?{|n| n >= 0 && n <= 7}
+  end
+
 end
 
 
 class Piece
+  attr_reader :value, :color, :piece_pos
+  def initialize(value, color, piece_pos)
+    @value, @color, @piece_pos = value, color, piece_pos
+  end
 end
 
 class NullPiece < Piece
